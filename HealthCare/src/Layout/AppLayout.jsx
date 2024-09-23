@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useCallback, useEffect } from "react";
 import { AuthConsumer } from "../Hooks/AuthConsumer";
+import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 function AppLayout({ children }) {
-   const context = AuthConsumer();
+   let context = AuthConsumer();
    const { user, isAuthenticated, dispatch, role } = context;
    const navigate = useNavigate();
 
@@ -19,10 +20,23 @@ function AppLayout({ children }) {
       navigate("/login");
    }
 
-   function onClickLogout() {
+   const onClickLogout = useCallback(() => {
       dispatch({ type: "logout" });
       navigate("/");
-   }
+   }, [dispatch, navigate])
+
+   useEffect(function() {
+      console.log(user, isAuthenticated, role);
+      if(isAuthenticated) {
+         if(role == "admin") {
+            navigate("/admin/home");
+         } else if(role == "doctor"){
+            navigate("/doctor/home");
+         }  else {
+            onClickLogout();
+         }
+      }
+   }, [user, isAuthenticated, role, navigate, onClickLogout]);
 
    return (
       <div className="max-h-screen flex flex-col">
@@ -52,8 +66,8 @@ function AppLayout({ children }) {
             }
          </nav>
 
-         <div className="flex-grow container mx-auto p-4">
-            {children}
+         <div className="flex-grow container mx-auto p-4 text-justify sm:w-3/4">
+            { children }
          </div>
       </div>
 

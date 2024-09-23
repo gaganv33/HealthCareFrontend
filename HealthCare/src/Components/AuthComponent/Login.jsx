@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { useState } from "react";
 
 function Login() {
+   const navigate = useNavigate();
    const context = AuthConsumer();
    const { dispatch } = context;
    const [username, setUsername] = useState();
@@ -9,7 +11,9 @@ function Login() {
 
    function onSubmitForm(e) {
       e.preventDefault();
-      dispatch({ type: "login", payload: { user:username, role:"admin"} });
+      const role = "doctor";
+      dispatch({ type: "login", payload: { user:username, role: role } });
+      navigate("/" + role + "/home");
    }
 
    return (
