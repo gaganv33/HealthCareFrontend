@@ -9,13 +9,13 @@ function DoctorLayout({ children }) {
    const { isAuthenticated, role } = context;
 
    useEffect(function() {
-      if(!isAuthenticated && role != "doctor") {
+      if(!isAuthenticated && role != "ROLE_USER") {
          navigate("/unauthorized");
       }
    }, [isAuthenticated, navigate, role]);
 
    return (
-      isAuthenticated && role == "doctor" && <>{ children }</>
+      isAuthenticated && role == "ROLE_USER" && <>{ children }</>
    )
 }
 

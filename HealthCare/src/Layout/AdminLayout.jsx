@@ -10,13 +10,13 @@ function AdminLayout({ children }) {
 
    useEffect(function() {
       console.log(isAuthenticated, role);
-      if(!isAuthenticated && role != "admin") {
+      if(!isAuthenticated && role != "ROLE_ADMIN") {
          navigate("/unauthorized");
       }
    }, [isAuthenticated, navigate, role]);
 
    return (
-      isAuthenticated && role == "admin" && <>{ children }</>
+      isAuthenticated && role == "ROLE_ADMIN" && <>{ children }</>
    )
 }
 

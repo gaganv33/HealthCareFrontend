@@ -1,19 +1,62 @@
-import { useNavigate } from "react-router-dom";
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { useState } from "react";
+import axios from "axios";
+import { ErrorPage } from "../MessageComponents/ErrorPage";
 
 function Login() {
-   const navigate = useNavigate();
    const context = AuthConsumer();
    const { dispatch } = context;
+
    const [username, setUsername] = useState();
    const [password, setPassword] = useState();
+   const [isError, setIsError] = useState(false);
+   const [errorMessage, setErrorMessage] = useState("");
 
-   function onSubmitForm(e) {
+   async function onSubmitForm(e) {
       e.preventDefault();
-      const role = "doctor";
-      dispatch({ type: "login", payload: { user:username, role: role } });
-      navigate("/" + role + "/home");
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const isValid = emailPattern.test(username);
+
+      if(!isValid) {
+         setErrorMessage(() => { return "Enter a valid username / email."; });
+         setIsError(() => { return true; });
+         return;
+      }
+
+      const length = password === null || password === undefined ? 0 : password.length;
+
+      if(length < 4) {
+         setErrorMessage(() => { return "Minimum length of password is 4."; });
+         setIsError(() => { return true; });
+         return;
+      }
+
+      if(length > 20) {
+         setErrorMessage(() => { return "Maximum length of password is 20."; });
+         setIsError(() => { return true; });
+         return;
+      }
+
+      try {
+         const data = await axios.post("http://localhost:8080/auth/login", { userName: username, password: password });
+         console.log(data);
+         if(data.status === 200) {
+            dispatch({ type: "login", payload: { user: data.data.userName, role: data.data.roles, access_token: data.data.token, 
+               firstName: data.data.firstName, lastName: data.data.lastName } });
+         } else {
+            setIsError(() => { return true; });
+            setErrorMessage(() => { return "Incorrect credentials."; });
+         }
+      } catch(e) {
+         console.log(e);
+         setIsError(() => { return true; });
+         setErrorMessage(() => { return e.response.data; });
+      }
+   }
+
+   function onErrorButtonClose() {
+      setIsError(() => { return false; });
+      setErrorMessage(() => { return ""; });
    }
 
    return (
@@ -44,8 +87,11 @@ function Login() {
                Login
             </button>
          </form>
+         {
+            isError && <ErrorPage message={ errorMessage } onErrorButtonClose={ onErrorButtonClose } />
+         }
       </div>
    );
 }
 
-export {Login};
+export { Login };

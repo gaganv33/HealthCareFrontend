@@ -24,17 +24,17 @@ function App() {
               <Route path="signup" element={ <SignUp />}/>
               <Route path="login" element={ <Login />}/>
               <Route path="admin" element={
-                <AdminLayout>
-                  <LayoutAdminIndex />
-                </AdminLayout>
-              }>
+                                            <AdminLayout>
+                                              <LayoutAdminIndex />
+                                            </AdminLayout>
+                                          }>
                 <Route index path="home" element={<AdminHomePage />} />
               </Route>
               <Route path="doctor" element={
-                <DoctorLayout>
-                  <LayoutDoctorIndex />
-                </DoctorLayout>
-              }>
+                                              <DoctorLayout>
+                                                <LayoutDoctorIndex />
+                                              </DoctorLayout>
+                                            }>
                 <Route index path="home" element={<DoctorHomePage />} />
               </Route>
               <Route path="unauthorized" element={<UnAuthorized />} />

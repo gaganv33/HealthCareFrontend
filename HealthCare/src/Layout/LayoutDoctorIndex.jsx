@@ -2,7 +2,10 @@ import { Outlet } from "react-router-dom";
 
 function LayoutDoctorIndex() {
    return (
-      <Outlet />
+      <div>
+         <h1 className="text-center">Doctor Page</h1>
+         <Outlet />
+      </div>
    )
 }
 
