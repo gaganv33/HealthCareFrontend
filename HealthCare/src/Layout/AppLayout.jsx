@@ -2,28 +2,40 @@ import { useCallback, useEffect, useState } from "react";
 import { AuthConsumer } from "../Hooks/AuthConsumer";
 import { useNavigate } from "react-router-dom";
 import { Profile } from "../Components/ProfileComponent/Profile";
+import { setCurrentPathInLocalStorage } from "../Hooks/UtilFunctions";
 
 // eslint-disable-next-line react/prop-types
 function AppLayout({ children }) {
    let context = AuthConsumer();
-   const { user, isAuthenticated, dispatch, role } = context;
+   const { isAuthenticated, dispatch, currentPath } = context;
    const navigate = useNavigate();
    const [isProfile, setIsProfile] = useState(false);
 
    function onClickSignUp() {
+      setCurrentPathInLocalStorage("/signup");
       navigate('/signup');
    }
 
    function onClickHomePage() {
-      navigate("/");
+      if(!isAuthenticated) {
+         setCurrentPathInLocalStorage("/");
+         navigate("/");
+      } else {
+         // Need to change according to the role type.
+         setCurrentPathInLocalStorage("/admin");
+         navigate("/admin");
+         //
+      }
    }
 
    function onClickLogin() {
+      setCurrentPathInLocalStorage("/login");
       navigate("/login");
    }
 
    const onClickLogout = useCallback(() => {
       dispatch({ type: "logout" });
+      setCurrentPathInLocalStorage("/");
       navigate("/");
    }, [dispatch, navigate]);
 
@@ -35,18 +47,13 @@ function AppLayout({ children }) {
       setIsProfile(() => { return false; });
    }
 
+
+   // *** Note: Dont add "navigate" in dependency array, since it does not allow to change the url. ***
    useEffect(function() {
-      console.log(user, isAuthenticated, role);
-      if(isAuthenticated) {
-         if(role === "ROLE_ADMIN") {
-            navigate("/admin/home");
-         } else if(role === "ROLE_USER"){
-            navigate("/doctor/home");
-         }  else {
-            onClickLogout();
-         }
-      }
-   }, [user, isAuthenticated, role, navigate, onClickLogout]);
+      navigate(currentPath);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [currentPath]);
+
 
    return (
       <div className="max-h-screen flex flex-col">
@@ -56,7 +63,7 @@ function AppLayout({ children }) {
                Health Care
             </h2>
             
-            {!isAuthenticated ? (
+         {!isAuthenticated ? (
                <div className="space-x-4 flex w-full justify-center sm:justify-end sm:basis-2/3">
                   <button className="bg-white text-blue-600 font-semibold py-2 px-4 rounded hover:bg-blue-500 hover:text-white transition"
                      onClick={onClickSignUp}>

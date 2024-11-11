@@ -10,14 +10,15 @@ function AdminLayout({ children }) {
 
    useEffect(function() {
       console.log(isAuthenticated, role);
-      if(!isAuthenticated && role != "ROLE_ADMIN") {
+      if(!isAuthenticated && role !== "ROLE_ADMIN") {
          navigate("/unauthorized");
       }
-   }, [isAuthenticated, navigate, role]);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [isAuthenticated, role]);
 
    return (
-      isAuthenticated && role == "ROLE_ADMIN" && <>{ children }</>
-   )
+      isAuthenticated && role === "ROLE_ADMIN" && <> { children } </>
+   );
 }
 
 export { AdminLayout }

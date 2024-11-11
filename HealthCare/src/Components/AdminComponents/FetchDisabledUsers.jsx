@@ -1,7 +1,7 @@
 import axios from "axios";
 import { AuthConsumer } from "../../Hooks/AuthConsumer"
 
-function AdminHomePage() {
+function FetchDisabledUsers() {
    const context = AuthConsumer();
 
    const { access_token } = context;
@@ -27,12 +27,13 @@ function AdminHomePage() {
 
    return (
       <div>
-         <h1>
-            Admin Home Page
-         </h1>
-         <button onClick={onClickButton}>Click</button>
+         Fetch disbaled users
+         < br/>
+         <button className="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition text-sm" onClick={ onClickButton }>
+            Test button
+         </button>
       </div>
    )
 }
 
-export { AdminHomePage }
+export { FetchDisabledUsers }

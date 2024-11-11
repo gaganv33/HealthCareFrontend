@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
+import { setLocalStorageValueOnLogin, setLocalStorageOnLogout } from "../Hooks/UtilFunctions";
 
 const AuthContext = createContext();
 
@@ -8,33 +9,29 @@ const intialState = {
    user : "",
    access_token: "",
    isAuthenticated : false,
-   role: ""
+   role: "",
+   currentPath: "/"
 };
-
-function setLocalStorageValueOnLogin(firstName, lastName, user, role, access_token) {
-   localStorage.setItem('firstName', JSON.stringify(firstName));
-   localStorage.setItem('lastName', JSON.stringify(lastName));
-   localStorage.setItem('user', JSON.stringify(user));
-   localStorage.setItem('access_token', JSON.stringify(access_token));
-   localStorage.setItem('isAuthenticated', JSON.stringify("true"));
-   localStorage.setItem('role', JSON.stringify(role));
-}
-
-function setLocalStorageOnLogout() {
-   localStorage.setItem('firstName', JSON.stringify(""));
-   localStorage.setItem('lastName', JSON.stringify(""));
-   localStorage.setItem('user', JSON.stringify(""));
-   localStorage.setItem('access_token', JSON.stringify(""));
-   localStorage.setItem('isAuthenticated', JSON.stringify("false"));
-   localStorage.setItem('role', JSON.stringify(""));
-}
 
 function reducer(state, action) {
    switch(action.type) {
       case "login":
-         setLocalStorageValueOnLogin(action.payload.firstName, action.payload.lastName, action.payload.user, action.payload.role, action.payload.access_token);
-         return { ...state, user: action.payload.user, isAuthenticated: true, role: action.payload.role, 
-            access_token: action.payload.access_token, firstName: action.payload.firstName, lastName: action.payload.lastName };
+         setLocalStorageValueOnLogin(
+            action.payload.firstName, 
+            action.payload.lastName, 
+            action.payload.user, 
+            action.payload.role, 
+            action.payload.access_token
+         );
+         return { 
+            ...state, 
+            user: action.payload.user, 
+            isAuthenticated: true, 
+            role: action.payload.role, 
+            access_token: action.payload.access_token, 
+            firstName: action.payload.firstName, 
+            lastName: action.payload.lastName 
+         };
       case "logout":
          setLocalStorageOnLogout();
          return { ...state, user: "", isAuthenticated: false, role: "", firstName: "", lastName: "", access_token: "" };
@@ -50,6 +47,8 @@ function reducer(state, action) {
          return { ...state, firstName: action.payload };
       case "setLastName":
          return { ...state, lastName: action.payload };
+      case "setCurrentPath":
+         return { ...state, currentPath: action.payload };
       default:
          throw new Error("Invalid action type.");
    }
@@ -57,7 +56,7 @@ function reducer(state, action) {
 
 // eslint-disable-next-line react/prop-types
 function AuthProvider({ children }) {
-   const [{ firstName, lastName, user, isAuthenticated, role, access_token }, dispatch] = useReducer(reducer, intialState);
+   const [{ firstName, lastName, user, isAuthenticated, role, access_token, currentPath }, dispatch] = useReducer(reducer, intialState);
 
    useEffect(function() {
       const firstNameLocalStorage = JSON.parse(localStorage.getItem('firstName'));
@@ -66,29 +65,37 @@ function AuthProvider({ children }) {
       const isAuthenticatedLocalStorage = JSON.parse(localStorage.getItem('isAuthenticated'));
       const roleLocalStorage = JSON.parse(localStorage.getItem('role'));
       const accessTokenLocalStorage = JSON.parse(localStorage.getItem('access_token'));
+      const currentPathLocalStorage = JSON.parse(localStorage.getItem('currentPath'));
 
-      if(firstNameLocalStorage) {
+      if(firstNameLocalStorage !== null) {
          dispatch({ type: "setFirstName", payload: firstNameLocalStorage });
       }
-      if(lastNameLocalStorage) {
+      if(lastNameLocalStorage !== null) {
          dispatch({ type: "setLastName", payload: lastNameLocalStorage });
       }
-      if(userLocalStorage) {
+      if(userLocalStorage !== null) {
          dispatch({ type: "setUser", payload: userLocalStorage });
       }
-      if(isAuthenticatedLocalStorage) {
-         dispatch({ type: "setIsAuthenticated", payload: isAuthenticatedLocalStorage });
+      if(isAuthenticatedLocalStorage !== null) {
+         if(isAuthenticatedLocalStorage === "false") {
+            dispatch({ type: "setIsAuthenticated", payload: false });
+         } else if(isAuthenticatedLocalStorage === "true") {
+            dispatch({ type: "setIsAuthenticated", payload: true });
+         }
       }
-      if(roleLocalStorage) {
+      if(roleLocalStorage !== null) {
          dispatch({ type: "setRole", payload: roleLocalStorage });
       }
-      if(accessTokenLocalStorage) {
+      if(accessTokenLocalStorage !== null) {
          dispatch({ type: "setAccessToken", payload: accessTokenLocalStorage });
+      }
+      if(currentPathLocalStorage !== null) {
+         dispatch({ type: "setCurrentPath", payload: currentPathLocalStorage });
       }
    }, []);
    
    return(
-      <AuthContext.Provider value={{ firstName, lastName, user, isAuthenticated, role, access_token, dispatch }}>
+      <AuthContext.Provider value={{ firstName, lastName, user, isAuthenticated, role, access_token, currentPath, dispatch }}>
          {children}
       </AuthContext.Provider>
    );

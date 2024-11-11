@@ -9,4 +9,4 @@ function AuthConsumer() {
    return authContext;
 }
 
-export {AuthConsumer};
+export { AuthConsumer };

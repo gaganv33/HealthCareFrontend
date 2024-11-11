@@ -2,10 +2,13 @@ import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { useState } from "react";
 import axios from "axios";
 import { ErrorPage } from "../MessageComponents/ErrorPage";
+import { useNavigate } from "react-router-dom";
+import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 
 function Login() {
    const context = AuthConsumer();
    const { dispatch } = context;
+   const navigate = useNavigate();
 
    const [username, setUsername] = useState();
    const [password, setPassword] = useState();
@@ -41,8 +44,20 @@ function Login() {
          const data = await axios.post("http://localhost:8080/auth/login", { userName: username, password: password });
          console.log(data);
          if(data.status === 200) {
-            dispatch({ type: "login", payload: { user: data.data.userName, role: data.data.roles, access_token: data.data.token, 
-               firstName: data.data.firstName, lastName: data.data.lastName } });
+            dispatch({ 
+               type: "login", 
+               payload: { 
+                  user: data.data.userName, 
+                  role: data.data.roles, 
+                  access_token: data.data.token, 
+                  firstName: data.data.firstName, 
+                  lastName: data.data.lastName 
+               }
+            });
+            // Need to change according to the role.
+            setCurrentPathInLocalStorage("/admin");
+            navigate("/admin");
+            // 
          } else {
             setIsError(() => { return true; });
             setErrorMessage(() => { return "Incorrect credentials."; });
@@ -66,21 +81,21 @@ function Login() {
             <div className="mb-4">
                <label className="block text-gray-700 text-sm font-semibold mb-2">Username</label>
                <input
-               type="text"
-               placeholder="Username"
-               value={username}
-               onChange={(e) => setUsername(e.target.value)}
-               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                />
             </div>
             <div className="mb-4">
                <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
                <input
-               type="password"
-               placeholder="Password"
-               value={password}
-               onChange={(e) => setPassword(e.target.value)}
-               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                />
             </div>
             <button className="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 transition">

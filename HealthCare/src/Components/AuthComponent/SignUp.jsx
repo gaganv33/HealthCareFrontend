@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ErrorPage } from "../MessageComponents/ErrorPage";
 import { SuccessPage } from "../MessageComponents/SuccessPage";
+import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 
 function SignUp() {
    const [username, setUsername] = useState();
@@ -84,6 +85,7 @@ function SignUp() {
    function onSuccessButtonClose() {
       setIsSuccess(() => { return false; });
       setSuccessMessage(() => { return ""; });
+      setCurrentPathInLocalStorage("/login");
       navigate("/login");
    }
 
@@ -94,51 +96,51 @@ function SignUp() {
             <div className="mb-4">
                <label className="block text-gray-700 text-sm font-semibold mb-2">First Name</label>
                <input
-               type="text"
-               placeholder="First Name"
-               value={firstName}
-               onChange={(e) => setFirstName(e.target.value)}
-               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                />
             </div>
             <div className="mb-4">
                <label className="block text-gray-700 text-sm font-semibold mb-2">Last Name</label>
                <input
-               type="text"
-               placeholder="Last Name"
-               value={lastName}
-               onChange={(e) => setLastName(e.target.value)}
-               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                />
             </div>
             <div className="mb-4">
                <label className="block text-gray-700 text-sm font-semibold mb-2">Username</label>
                <input
-               type="text"
-               placeholder="Username"
-               value={username}
-               onChange={(e) => setUsername(e.target.value)}
-               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                />
             </div>
             <div className="mb-4">
                <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
                <input
-               type="password"
-               placeholder="Password"
-               value={password}
-               onChange={(e) => setPassword(e.target.value)}
-               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                />
             </div>
             <div className="mb-4">
                <label className="block text-gray-700 text-sm font-semibold mb-2">Confirm Password</label>
                <input
-               type="password"
-               placeholder="Confirm Password"
-               value={confirmPassword}
-               onChange={(e) => setconfirmPassword(e.target.value)}
-               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="password"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setconfirmPassword(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                />
             </div>
             <div className="mb-4">
