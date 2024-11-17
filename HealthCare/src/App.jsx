@@ -5,14 +5,17 @@ import { SignUp } from './Components/AuthComponent/Signup'
 import { HomePage } from './Components/HomePageComponent/HomePage'
 import { Login } from './Components/AuthComponent/Login'
 import { UnAuthorized } from './Components/UnAuthorizedComponent/UnAuthorized'
-import { AdminLayout } from './Layout/AdminLayout'
-import { LayoutAdminIndex } from './Layout/LayoutAdminIndex'
-import { DoctorLayout } from './Layout/DoctorLayout'
-import { LayoutDoctorIndex } from './Layout/LayoutDoctorIndex'
+import { AdminLayout } from './Layout/Layouts/AdminLayout'
+import { LayoutAdminIndex } from './Layout/Index/LayoutAdminIndex'
+import { DoctorLayout } from './Layout/Layouts/DoctorLayout'
+import { LayoutDoctorIndex } from './Layout/Index/LayoutDoctorIndex'
 import { DoctorHomePage } from './Components/DoctorComponents/DoctorHomePage'
 import { PageNotFound } from './Components/PageNotFoundComponent/PageNotFound'
 import { FetchDisabledUsers } from './Components/AdminComponents/fetchDisabledUsers'
 import { UpdateDashboardPassword } from './Components/AdminComponents/UpdateDashboardPassword'
+import { LayoutPatientIndex } from './Layout/Index/LayoutPatientIndex'
+import { PatientLayout } from './Layout/Layouts/PatientLayout'
+import { PatientHomePage } from './Components/PatientComponents/PatientHomePage'
 
 function App() {
 
@@ -38,6 +41,13 @@ function App() {
                                               </DoctorLayout>
                                             }>
                 <Route index element={ <DoctorHomePage /> } />
+              </Route>
+              <Route path="patient" element={
+                                              <PatientLayout>
+                                                <LayoutPatientIndex />
+                                              </PatientLayout>
+                                            }>
+                <Route index element={ <PatientHomePage /> } />
               </Route>
               <Route path="unauthorized" element={ <UnAuthorized /> } />
               <Route path='*' element={ <PageNotFound /> } />

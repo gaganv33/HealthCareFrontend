@@ -1,29 +1,37 @@
 import { useCallback, useEffect, useState } from "react";
 import { AuthConsumer } from "../Hooks/AuthConsumer";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Profile } from "../Components/ProfileComponent/Profile";
 import { setCurrentPathInLocalStorage } from "../Hooks/UtilFunctions";
 
 // eslint-disable-next-line react/prop-types
 function AppLayout({ children }) {
    let context = AuthConsumer();
-   const { isAuthenticated, dispatch, currentPath } = context;
+   const { isAuthenticated, dispatch, currentPath, role } = context;
    const navigate = useNavigate();
    const [isProfile, setIsProfile] = useState(false);
+   const location = useLocation();
 
    function onClickSignUp() {
       setCurrentPathInLocalStorage("/signup");
       navigate('/signup');
    }
 
-   function onClickHomePage() {
+   async function onClickHomePage() {
       if(!isAuthenticated) {
-         setCurrentPathInLocalStorage("/");
          navigate("/");
       } else {
          // Need to change according to the role type.
-         setCurrentPathInLocalStorage("/admin");
-         navigate("/admin");
+         if(role === "ROLE_ADMIN") {
+            setCurrentPathInLocalStorage("/admin");
+            navigate("/admin");
+         } else if(role === "ROLE_DOCTOR") {
+            setCurrentPathInLocalStorage("/doctor");
+            navigate("/doctor");
+         } else if(role === "ROLE_PATIENT") {
+            setCurrentPathInLocalStorage("/patient");
+            navigate("/patient");
+         }
          //
       }
    }
@@ -37,7 +45,8 @@ function AppLayout({ children }) {
       dispatch({ type: "logout" });
       setCurrentPathInLocalStorage("/");
       navigate("/");
-   }, [dispatch, navigate]);
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [dispatch]);
 
    function onClickProfile() {
       setIsProfile(() => { return true; });
@@ -50,9 +59,13 @@ function AppLayout({ children }) {
 
    // *** Note: Dont add "navigate" in dependency array, since it does not allow to change the url. ***
    useEffect(function() {
-      navigate(currentPath);
+      console.log(currentPath, location.pathname);
+      if(location.pathname !== currentPath) {
+         navigate(location.pathname);
+      }
+      
    // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [currentPath]);
+   }, [currentPath, isAuthenticated]);
 
 
    return (

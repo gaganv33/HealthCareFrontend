@@ -56,10 +56,10 @@ function SignUp() {
          const data = await axios.post("http://localhost:8080/auth/register", {
             firstName : firstName, 
             lastName : lastName, 
-            userName : username,
+            username : username,
             password: password,
             confirmPassword: confirmPassword,
-            roles : roles
+            role : roles
          });
          console.log(data);
          if(data.status === 201) {
@@ -148,7 +148,10 @@ function SignUp() {
                <select value={roles} onChange={(e) => setRoles(e.target.value)} 
                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="ROLE_ADMIN">ADMIN</option>
-                  <option value="ROLE_USER">USER</option>
+                  <option value="ROLE_DOCTOR">DOCTOR</option>
+                  <option value="ROLE_PATIENT">PATIENT</option>
+                  <option value="ROLE_PHLEBOTOMIST">PHLEBOTOMIST</option>
+                  <option value="ROLE_RECEPTIONIST">RECEPTIONIST</option>
                </select>
             </div>
             <button className="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600 transition">

@@ -1,4 +1,9 @@
+
+import { useNavigate } from "react-router-dom";
+
 function UnAuthorized() {
+   const navigate = useNavigate();
+
    return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
@@ -6,7 +11,7 @@ function UnAuthorized() {
          <p className="text-gray-700 mb-6">You do not have permission to view this page.</p>
          <button
             className="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition"
-            onClick={() => window.history.back()}
+            onClick={() => navigate("/")}
          >
             Go Back
          </button>

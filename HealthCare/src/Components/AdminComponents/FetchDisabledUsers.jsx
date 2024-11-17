@@ -14,8 +14,7 @@ function FetchDisabledUsers() {
                'Authorization' : 'Bearer ' + access_token,
                'Access-Control-Allow-Origin': '*',
                'Content-Type': 'application/json',
-               withCredentials: true,
-               // mode: 'no-cors',
+               withCredentials: true
             }
          };
          const data = await axios.get('http://localhost:8080/products/all', config);

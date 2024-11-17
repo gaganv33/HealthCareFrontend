@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { AuthConsumer } from "../Hooks/AuthConsumer"
+import { AuthConsumer } from "../../Hooks/AuthConsumer"
 import { useNavigate } from "react-router-dom";
+// import { setCurrentPathInLocalStorage } from "../Hooks/UtilFunctions";
 
 // eslint-disable-next-line react/prop-types
 function AdminLayout({ children }) {
@@ -11,6 +12,7 @@ function AdminLayout({ children }) {
    useEffect(function() {
       console.log(isAuthenticated, role);
       if(!isAuthenticated && role !== "ROLE_ADMIN") {
+         // setCurrentPathInLocalStorage("/unauthorized");
          navigate("/unauthorized");
       }
    // eslint-disable-next-line react-hooks/exhaustive-deps

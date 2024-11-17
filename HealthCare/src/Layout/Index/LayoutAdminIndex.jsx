@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { setCurrentPathInLocalStorage } from "../Hooks/UtilFunctions";
+import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 
 function LayoutAdminIndex() {
    const navigate = useNavigate();
@@ -24,11 +24,13 @@ function LayoutAdminIndex() {
             Admin Home Page
          </h1>
          <nav className="flex flex-row space-x-2 justify-center">
-            <button className="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition text-sm" 
+            <button 
+               className="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition text-sm" 
                onClick={ (e) => onClickFetchDisabledUsers(e) }>
                Fetch Disabled Password
             </button>
-            <button className="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition text-sm" 
+            <button 
+               className="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition text-sm" 
                onClick={ (e) => onClickUpdateDashboardPassword(e) }>
                Update Dashboard Password
             </button>

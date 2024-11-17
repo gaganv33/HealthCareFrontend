@@ -41,23 +41,31 @@ function Login() {
       }
 
       try {
-         const data = await axios.post("http://localhost:8080/auth/login", { userName: username, password: password });
+         const data = await axios.post("http://localhost:8080/auth/login", { username: username, password: password });
          console.log(data);
          if(data.status === 200) {
+            // Need to change according to the role.
+            if(data.data.user.role === "ROLE_ADMIN") {
+               setCurrentPathInLocalStorage("/admin");
+               navigate("/admin");
+            } else if(data.data.user.role === "ROLE_DOCTOR") {
+               setCurrentPathInLocalStorage("/doctor");
+               navigate("/doctor");
+            } else if(data.data.user.role === "ROLE_PATIENT") {
+               setCurrentPathInLocalStorage("/patient");
+               navigate("/patient");
+            }
+            // 
             dispatch({ 
                type: "login", 
                payload: { 
-                  user: data.data.userName, 
-                  role: data.data.roles, 
+                  user: data.data.user.username, 
+                  role: data.data.user.role, 
                   access_token: data.data.token, 
-                  firstName: data.data.firstName, 
-                  lastName: data.data.lastName 
+                  firstName: data.data.user.firstName, 
+                  lastName: data.data.user.lastName 
                }
             });
-            // Need to change according to the role.
-            setCurrentPathInLocalStorage("/admin");
-            navigate("/admin");
-            // 
          } else {
             setIsError(() => { return true; });
             setErrorMessage(() => { return "Incorrect credentials."; });
