@@ -1,9 +1,9 @@
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { useState } from "react";
-import axios from "axios";
 import { ErrorPage } from "../MessageComponents/ErrorPage";
 import { useNavigate } from "react-router-dom";
 import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { axiosInstance } from "../../axios/axios";
 
 function Login() {
    const context = AuthConsumer();
@@ -41,7 +41,11 @@ function Login() {
       }
 
       try {
-         const data = await axios.post("http://localhost:8080/auth/login", { username: username, password: password });
+         const data = await axiosInstance.post("auth/login", 
+            { 
+               username: username, 
+               password: password 
+            });
          console.log(data);
          if(data.status === 200) {
             // Need to change according to the role.

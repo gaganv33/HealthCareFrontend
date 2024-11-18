@@ -1,23 +1,10 @@
-import axios from "axios";
-import { AuthConsumer } from "../../Hooks/AuthConsumer"
+import { axiosInstance } from "../../axios/axios";
 
 function FetchDisabledUsers() {
-   const context = AuthConsumer();
-
-   const { access_token } = context;
 
    async function onClickButton() {
       try {
-         console.log("Bearer " + access_token);
-         const config = {
-            headers: {
-               'Authorization' : 'Bearer ' + access_token,
-               'Access-Control-Allow-Origin': '*',
-               'Content-Type': 'application/json',
-               withCredentials: true
-            }
-         };
-         const data = await axios.get('http://localhost:8080/products/all', config);
+         const data = await axiosInstance.get('products/all');
          console.log(data);
       } catch(e) {
          console.log(e);

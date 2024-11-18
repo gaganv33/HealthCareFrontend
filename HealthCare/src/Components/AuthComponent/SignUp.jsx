@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ErrorPage } from "../MessageComponents/ErrorPage";
 import { SuccessPage } from "../MessageComponents/SuccessPage";
 import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { axiosInstance } from "../../axios/axios";
 
 function SignUp() {
    const [username, setUsername] = useState();
@@ -53,7 +53,7 @@ function SignUp() {
       }
       
       try {
-         const data = await axios.post("http://localhost:8080/auth/register", {
+         const data = await axiosInstance.post("auth/register", {
             firstName : firstName, 
             lastName : lastName, 
             username : username,
