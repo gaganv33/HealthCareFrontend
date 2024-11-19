@@ -15,7 +15,7 @@ import { FetchDisabledUsers } from './Components/AdminComponents/fetchDisabledUs
 import { UpdateDashboardPassword } from './Components/AdminComponents/UpdateDashboardPassword'
 import { LayoutPatientIndex } from './Layout/Index/LayoutPatientIndex'
 import { PatientLayout } from './Layout/Layouts/PatientLayout'
-import { PatientHomePage } from './Components/PatientComponents/PatientHomePage'
+import { BookAppointment } from './Components/PatientComponents/BookAppointment'
 
 function App() {
 
@@ -47,7 +47,7 @@ function App() {
                                                 <LayoutPatientIndex />
                                               </PatientLayout>
                                             }>
-                <Route index element={ <PatientHomePage /> } />
+                <Route index element={ <BookAppointment /> } />
               </Route>
               <Route path="unauthorized" element={ <UnAuthorized /> } />
               <Route path='*' element={ <PageNotFound /> } />

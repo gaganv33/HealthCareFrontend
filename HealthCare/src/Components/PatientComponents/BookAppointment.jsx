@@ -5,7 +5,7 @@ import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axios";
 
-function PatientHomePage() {
+function BookAppointment() {
    const context = AuthConsumer();
    const { access_token, dispatch } = context;
 
@@ -192,4 +192,4 @@ function PatientHomePage() {
    );
 }
 
-export { PatientHomePage }
+export { BookAppointment }
