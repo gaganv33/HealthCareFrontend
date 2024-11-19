@@ -77,7 +77,7 @@ function Login() {
       } catch(e) {
          console.log(e);
          setIsError(() => { return true; });
-         setErrorMessage(() => { return e.response.data; });
+         setErrorMessage(() => { return e?.response?.data; });
       }
    }
 

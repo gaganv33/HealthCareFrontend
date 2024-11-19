@@ -39,6 +39,8 @@ function BookAppointment() {
             setDoctors(data.data);
          } catch(e) {
             console.log(e);
+            setIsError(() => { return true; });
+            setErrorMessage(() => { return e?.response?.data; });
          }
       }
 
@@ -72,7 +74,7 @@ function BookAppointment() {
             navigate("/");
          } else {
             setIsError(() => { return true; });
-            setErrorMessage(() => { return e.response.data; });
+            setErrorMessage(() => { return e?.response?.data; });
          }
       }
    }
@@ -104,7 +106,7 @@ function BookAppointment() {
       } catch(e) {
          console.log(e);
          setIsError(() => { return true; });
-         setErrorMessage(() => { return e.response.data.error; });
+         setErrorMessage(() => { return e?.response?.data?.error; });
       }
    }
    

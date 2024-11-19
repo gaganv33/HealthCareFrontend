@@ -72,7 +72,9 @@ function SignUp() {
          }
       } catch(e) {
          console.log(e);
-         setErrorMessage(() => { return e.response.data });
+         setErrorMessage(() => { 
+            return e?.response?.data 
+         });
          setIsError(() => { return true; });
       }
    }
