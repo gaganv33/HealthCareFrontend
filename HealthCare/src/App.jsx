@@ -16,6 +16,11 @@ import { UpdateDashboardPassword } from './Components/AdminComponents/UpdateDash
 import { LayoutPatientIndex } from './Layout/Index/LayoutPatientIndex'
 import { PatientLayout } from './Layout/Layouts/PatientLayout'
 import { BookAppointment } from './Components/PatientComponents/BookAppointment'
+import { AppointmentDetails } from './Components/PatientComponents/AppointmentDetails'
+import { AddNewStage } from './Components/AdminComponents/AddNewStage'
+import { AddMedicineInventory } from './Components/AdminComponents/AddMedicineInventory'
+import { AddLabTest } from './Components/AdminComponents/AddLabTest'
+import { AddNewSlots } from './Components/AdminComponents/AddNewSlots'
 
 function App() {
 
@@ -34,6 +39,10 @@ function App() {
                                           }>
                 <Route index element={ <FetchDisabledUsers /> } />
                 <Route path="updateDashboardPassword" element={ <UpdateDashboardPassword /> } />
+                <Route path="addNewStage" element={ <AddNewStage /> } />
+                <Route path="addNewMedicines" element={ <AddMedicineInventory /> } />
+                <Route path="addNewLabTests" element={ <AddLabTest /> } />
+                <Route path="addNewSlots" element={ <AddNewSlots /> } />
               </Route>
               <Route path="doctor" element={
                                               <DoctorLayout>
@@ -48,6 +57,7 @@ function App() {
                                               </PatientLayout>
                                             }>
                 <Route index element={ <BookAppointment /> } />
+                <Route path='appointment/details' element={ <AppointmentDetails /> } />
               </Route>
               <Route path="unauthorized" element={ <UnAuthorized /> } />
               <Route path='*' element={ <PageNotFound /> } />

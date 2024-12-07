@@ -1,36 +1,50 @@
 import { useState } from "react";
-import { ErrorPage } from "../MessageComponents/ErrorPage";
-import { SuccessPage } from "../MessageComponents/SuccessPage";
+import { AuthConsumer } from "../../Hooks/AuthConsumer";
+import { axiosInstance } from "../../axios/axios";
+import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { useNavigate } from "react-router-dom";
 
 function UpdateDashboardPassword() {
+   const context = AuthConsumer();
+   const { dispatch } = context;
+   const navigate = useNavigate();
+
    const [oldPassword, setOldPassword] = useState("");
    const [newPassword, setNewPassword] = useState("");
    const [retypeNewPassword, setRetypeNewPassword] = useState("");
 
-   const [isError, setIsError] = useState(false);
-   const [errorMessage, setErrorMessage] = useState("");
-
-   const [isSuccess, setIsSuccess] = useState(false);
-   const [successMessage, setSuccessMessage] = useState("");
-
-   function onClickUpdateDashboardPasswordButton(e) {
+   async function onClickUpdateDashboardPasswordButton(e) {
       e.preventDefault();
       
-      if(isError !== retypeNewPassword) {
-         setErrorMessage(() => { return "New password and Re-enter password are not matching."; });
-         setIsError(() => { return true; });
+      if(newPassword !== retypeNewPassword) {
+         dispatch({ 
+            type: "setErrorMessage", 
+            payload: "new password and the retyped password are not matching" 
+         });
          return;
       }
-   }
 
-   function onErrorButtonClose() {
-      setIsError(() => { return false; });
-      setErrorMessage(() => { return ""; });
-   }
-
-   function onSuccessButtonClose() {
-      setIsSuccess(() => { return false; });
-      setSuccessMessage(() => { return ""; });
+      dispatch({ type: "setLoading" });
+      try {
+         const data = await axiosInstance.put("/admin/updateDashboardPassword", {
+            "oldPassword" : oldPassword,
+            "newPassword" : newPassword,
+            "retypeNewPassword": retypeNewPassword
+         });
+         console.log(data);
+         dispatch({ type: "setSuccessMessage", payload: data.data });
+      } catch(e) {
+         console.log(e);
+         if(e.status === 403 || e.status === 401) {
+            dispatch({ type: "logout" });
+            setCurrentPathInLocalStorage("/");
+            navigate("/");
+         } else {
+            dispatch({ type: "setErrorMessage", payload: e?.response?.data?.error });
+         }
+      } finally {
+         dispatch({ type: "unsetLoading" });
+      }
    }
 
    return (
@@ -77,12 +91,6 @@ function UpdateDashboardPassword() {
                </button>
             </div>
          </form>
-         {
-            isError && <ErrorPage message={ errorMessage } onErrorButtonClose={ onErrorButtonClose } />
-         }
-         {
-            isSuccess && <SuccessPage message={ successMessage } onSuccessButtonClose={ onSuccessButtonClose } />
-         }
       </div>
    );
 }

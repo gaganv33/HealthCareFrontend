@@ -11,6 +11,13 @@ function LayoutPatientIndex() {
       console.log("Book Appointment");
    }
 
+   function onClickAppointmentDetails(e) {
+      e.preventDefault();
+      setCurrentPathInLocalStorage("/patient/appointment/details");
+      navigate("/patient/appointment/details");
+      console.log("Appointment details")
+   }
+
    return (
       <div>
          <h1 className="text-xl font-bold text-center mb-2">
@@ -23,6 +30,12 @@ function LayoutPatientIndex() {
                onClick={(e) => onClickBookAppointment(e)}
             >
                Book Appointment
+            </button>
+            <button 
+               className="bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition text-sm" 
+               onClick={(e) => onClickAppointmentDetails(e)}
+            >
+               Appointment Details
             </button>
          </nav>
 

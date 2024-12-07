@@ -7,7 +7,7 @@ import { axiosInstance } from "../../axios/axios";
 
 function BookAppointment() {
    const context = AuthConsumer();
-   const { access_token, dispatch } = context;
+   const { dispatch } = context;
 
    const [doctors, setDoctors] = useState([]);
    const [openSlots, setOpenSlots] = useState([]);
@@ -39,13 +39,19 @@ function BookAppointment() {
             setDoctors(data.data);
          } catch(e) {
             console.log(e);
-            setIsError(() => { return true; });
-            setErrorMessage(() => { return e?.response?.data; });
+            if(e.status === 403 || e.status === 401) {
+               dispatch({ type: "logout" });
+               setCurrentPathInLocalStorage("/");
+               navigate("/");
+            } else {
+               setIsError(() => { return true; });
+               setErrorMessage(() => { return e?.response?.data?.detail; });
+            }
          }
       }
 
       getData();
-   }, [access_token]);
+   }, [navigate, dispatch]);
 
 
    async function onClickGetOpenSlots(e) {
@@ -74,7 +80,7 @@ function BookAppointment() {
             navigate("/");
          } else {
             setIsError(() => { return true; });
-            setErrorMessage(() => { return e?.response?.data; });
+            setErrorMessage(() => { return e?.response?.data?.detail; });
          }
       }
    }
@@ -105,8 +111,14 @@ function BookAppointment() {
          console.log(data);
       } catch(e) {
          console.log(e);
-         setIsError(() => { return true; });
-         setErrorMessage(() => { return e?.response?.data?.error; });
+         if(e.status === 403 || e.status === 401) {
+            dispatch({ type: "logout" });
+            setCurrentPathInLocalStorage("/");
+            navigate("/");
+         } else {
+            setIsError(() => { return true; });
+            setErrorMessage(() => { return e?.response?.data?.detail; });
+         }
       }
    }
    
@@ -190,7 +202,6 @@ function BookAppointment() {
             isError && ( <ErrorPage message={errorMessage} onErrorButtonClose={onErrorButtonClose} />)
          }
       </div>
-
    );
 }
 

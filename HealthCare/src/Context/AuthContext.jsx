@@ -10,7 +10,12 @@ const intialState = {
    access_token: "",
    isAuthenticated : false,
    role: "",
-   currentPath: "/"
+   currentPath: "/",
+   isError: false,
+   errorMessage: "",
+   isSuccess: false,
+   successMessage: "",
+   isLoading: false
 };
 
 function reducer(state, action) {
@@ -49,6 +54,18 @@ function reducer(state, action) {
          return { ...state, lastName: action.payload };
       case "setCurrentPath":
          return { ...state, currentPath: action.payload };
+      case "setSuccessMessage":
+         return { ...state, successMessage: action.payload, isSuccess: true };
+      case "unsetSuccessMessage":
+         return { ...state, successMessage: "", isSuccess: false };
+      case "setErrorMessage":
+         return { ...state, errorMessage: action.payload, isError: true };
+      case "unsetErrorMessage":
+         return { ...state, errorMessage: "", isError: false };
+      case "setLoading":
+         return { ...state, isLoading: true };
+      case "unsetLoading":
+         return { ...state, isLoading: false };
       default:
          throw new Error("Invalid action type.");
    }
@@ -56,7 +73,7 @@ function reducer(state, action) {
 
 // eslint-disable-next-line react/prop-types
 function AuthProvider({ children }) {
-   const [{ firstName, lastName, user, isAuthenticated, role, access_token, currentPath }, dispatch] = useReducer(reducer, intialState);
+   const [{ firstName, lastName, user, isAuthenticated, role, access_token, currentPath, isSuccess, successMessage, isError, errorMessage, isLoading }, dispatch] = useReducer(reducer, intialState);
 
    useEffect(function() {
       const firstNameLocalStorage = JSON.parse(localStorage.getItem('firstName'));
@@ -95,7 +112,7 @@ function AuthProvider({ children }) {
    }, []);
    
    return(
-      <AuthContext.Provider value={{ firstName, lastName, user, isAuthenticated, role, access_token, currentPath, dispatch }}>
+      <AuthContext.Provider value={{ firstName, lastName, user, isAuthenticated, role, access_token, currentPath, isError, errorMessage, isSuccess, successMessage, isLoading, dispatch }}>
          {children}
       </AuthContext.Provider>
    );

@@ -3,11 +3,14 @@ import { AuthConsumer } from "../Hooks/AuthConsumer";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Profile } from "../Components/ProfileComponent/Profile";
 import { setCurrentPathInLocalStorage } from "../Hooks/UtilFunctions";
+import { Loading } from "../Components/LoadingComponent/Loading";
+import { SuccessPage } from "../Components/MessageComponents/SuccessPage";
+import { ErrorPage } from "../Components/MessageComponents/ErrorPage";
 
 // eslint-disable-next-line react/prop-types
 function AppLayout({ children }) {
    let context = AuthConsumer();
-   const { isAuthenticated, dispatch, currentPath, role } = context;
+   const { isAuthenticated, dispatch, currentPath, role, isError, errorMessage, isSuccess, successMessage, isLoading } = context;
    const navigate = useNavigate();
    const [isProfile, setIsProfile] = useState(false);
    const location = useLocation();
@@ -54,6 +57,15 @@ function AppLayout({ children }) {
 
    function onCloseProfile() {
       setIsProfile(() => { return false; });
+   }
+
+   function onErrorCloseButton() {
+      dispatch({ type: "unsetErrorMessage" });
+   }
+
+   function onSuccessButtonClose() {
+      dispatch({ type: "unsetSuccessMessage" });
+      window.location.reload();
    }
 
 
@@ -105,7 +117,18 @@ function AppLayout({ children }) {
             {children}
          </div>
 
-         { isProfile && <Profile onCloseProfile={onCloseProfile} /> }
+         { 
+            isProfile && <Profile onCloseProfile={onCloseProfile} /> 
+         }
+         {
+            isLoading && <Loading />
+         }
+         {
+            isSuccess && <SuccessPage message={successMessage} onSuccessButtonClose={onSuccessButtonClose} />
+         }
+         {
+            isError && <ErrorPage message={errorMessage} onErrorButtonClose={onErrorCloseButton} />
+         }
       </div>
    )
 }
