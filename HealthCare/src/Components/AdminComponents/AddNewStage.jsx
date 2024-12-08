@@ -19,7 +19,7 @@ function AddNewStage() {
       }
       try {
          const data = await axiosInstance.post("/admin/addNewStages", {
-            "stageList": [stage]
+            "stageList": stage.trim().split(",")
          });
          console.log(data);
          dispatch({ type: "setSuccessMessage", payload: data.data });
@@ -52,7 +52,7 @@ function AddNewStage() {
                   value={stage}
                   onChange={(e) => setStage(e.target.value)}
                   className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter stage name"
+                  placeholder="Enter stage name (seperated by ,)"
                />
                </div>
 

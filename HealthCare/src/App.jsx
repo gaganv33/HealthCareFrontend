@@ -9,7 +9,6 @@ import { AdminLayout } from './Layout/Layouts/AdminLayout'
 import { LayoutAdminIndex } from './Layout/Index/LayoutAdminIndex'
 import { DoctorLayout } from './Layout/Layouts/DoctorLayout'
 import { LayoutDoctorIndex } from './Layout/Index/LayoutDoctorIndex'
-import { DoctorHomePage } from './Components/DoctorComponents/DoctorHomePage'
 import { PageNotFound } from './Components/PageNotFoundComponent/PageNotFound'
 import { FetchDisabledUsers } from './Components/AdminComponents/fetchDisabledUsers'
 import { UpdateDashboardPassword } from './Components/AdminComponents/UpdateDashboardPassword'
@@ -21,6 +20,8 @@ import { AddNewStage } from './Components/AdminComponents/AddNewStage'
 import { AddMedicineInventory } from './Components/AdminComponents/AddMedicineInventory'
 import { AddLabTest } from './Components/AdminComponents/AddLabTest'
 import { AddNewSlots } from './Components/AdminComponents/AddNewSlots'
+import { GetAppointmentWaitingForApproval } from './Components/DoctorComponents/GetAppointmentWaitingForApproval'
+import { GetUpcomingAppointment } from './Components/DoctorComponents/GetUpcomingAppointment'
 
 function App() {
 
@@ -49,7 +50,8 @@ function App() {
                                                 <LayoutDoctorIndex />
                                               </DoctorLayout>
                                             }>
-                <Route index element={ <DoctorHomePage /> } />
+                <Route index element={ <GetAppointmentWaitingForApproval /> } />
+                <Route path="getAllUpcomingAppointments" element={ <GetUpcomingAppointment /> } />
               </Route>
               <Route path="patient" element={
                                               <PatientLayout>

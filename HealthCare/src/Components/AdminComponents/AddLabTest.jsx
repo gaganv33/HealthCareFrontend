@@ -20,7 +20,7 @@ function AddLabTest() {
          const data = await axiosInstance.post("/admin/addNewLabTests", [
             {
                "labTestName" : labTestName,
-               "labTestFields": labTestFields.split(",")
+               "labTestFields": labTestFields.trim().split(",")
             }
          ]);
          console.log(data);
