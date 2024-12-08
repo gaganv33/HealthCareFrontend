@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
-import { ErrorPage } from "../MessageComponents/ErrorPage";
 import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axios";
@@ -23,18 +22,12 @@ function BookAppointment() {
    const [appointmentDate, setAppointmentDate] = useState(formattedDate);
    const [selectedSlotId, setSelectedSlotId] = useState(-1);
 
-   const [isError, setIsError] = useState(false);
-   const [errorMessage, setErrorMessage] = useState("");
-
-   function onErrorButtonClose() {
-      setIsError(() => { return false; });
-      setErrorMessage(() => { return ""; });
-   }
-
    useEffect(() => {
       async function getData() {
+         dispatch({ type: "setLoading" });
+
          try {
-            const data = await axiosInstance.get('patient/getAllDoctors');
+            const data = await axiosInstance.get('patient/appointment/getAllDoctors');
             console.log(data);
             setDoctors(data.data);
          } catch(e) {
@@ -44,9 +37,10 @@ function BookAppointment() {
                setCurrentPathInLocalStorage("/");
                navigate("/");
             } else {
-               setIsError(() => { return true; });
-               setErrorMessage(() => { return e?.response?.data?.detail; });
+               dispatch({ type: "setErrorMessage", payload: e?.response?.data?.detail });
             }
+         } finally {
+            dispatch({ type: "unsetLoading" });
          }
       }
 
@@ -56,10 +50,10 @@ function BookAppointment() {
 
    async function onClickGetOpenSlots(e) {
       e.preventDefault();
+      dispatch({ type: "setLoading" });
 
       if(selectedDoctor === -1) {
-         setIsError(() => { return true; });
-         setErrorMessage(() => { return "Select a doctor"; });
+         dispatch({ type: "setErrorMessage", payload: "Select a doctor" });
          return;
       }
 
@@ -69,7 +63,7 @@ function BookAppointment() {
       }
 
       try {
-         const data = await axiosInstance.post('patient/getOpenSlots', requestData);
+         const data = await axiosInstance.post('patient/appointment/getOpenSlots', requestData);
          console.log(data); 
          setOpenSlots(() => { return data.data; });
       } catch(e) {
@@ -79,24 +73,24 @@ function BookAppointment() {
             setCurrentPathInLocalStorage("/");
             navigate("/");
          } else {
-            setIsError(() => { return true; });
-            setErrorMessage(() => { return e?.response?.data?.detail; });
+            dispatch({ type: "setErrorMessage", payload: e?.response?.data?.detail });
          }
+      } finally {
+         dispatch({ type: "unsetLoading" });
       }
    }
 
    async function onClickBookAnAppointment(e) {
       e.preventDefault();
+      dispatch({ type: "setLoading" });
 
       if(selectedDoctor === -1) {
-         setIsError(() => { return true; });
-         setErrorMessage(() => { return "Select a doctor"; });
+         dispatch({ type: "setErrorMessage", payload: "Select a doctor" });
          return;
       }
 
       if(selectedSlotId === -1) {
-         setIsError(() => { return true; });
-         setErrorMessage(() => { return "Select a slot"; });
+         dispatch({ type: "setErrorMessage", payload: "Select a slot" });
          return;
       }
 
@@ -107,8 +101,9 @@ function BookAppointment() {
             'slotId': selectedSlotId
          }
 
-         const data = await axiosInstance.post('patient/bookAppointment', requestData);
+         const data = await axiosInstance.post('patient/appointment/bookAppointment', requestData);
          console.log(data);
+         dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
          if(e.status === 403 || e.status === 401) {
@@ -116,9 +111,10 @@ function BookAppointment() {
             setCurrentPathInLocalStorage("/");
             navigate("/");
          } else {
-            setIsError(() => { return true; });
-            setErrorMessage(() => { return e?.response?.data?.detail; });
+            dispatch({ type: "setErrorMessage", payload: e?.response?.data?.error });
          }
+      } finally {
+         dispatch({ type: "unsetLoading" });
       }
    }
    
@@ -126,7 +122,6 @@ function BookAppointment() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
          <h1 className="text-2xl font-bold text-gray-800 mb-6">Book Appointment</h1>
          <form className="bg-white p-6 rounded-lg shadow-md w-full max-w-md space-y-4">
-            {/* Selecting a doctor */}
             <div>
                <label className="block text-gray-700 font-medium mb-2">
                   Select a doctor
@@ -148,7 +143,6 @@ function BookAppointment() {
                </select>
             </div>
 
-            {/* Date picker */}
             <div>
                <label className="block text-gray-700 font-medium mb-2">
                   Choose the date of appointment
@@ -161,7 +155,6 @@ function BookAppointment() {
                />
             </div>
 
-            {/* Open slots */}
             <div>
                <button
                   onClick={(e) => onClickGetOpenSlots(e)}
@@ -179,14 +172,13 @@ function BookAppointment() {
                   </option>
                   {
                      openSlots.map((slots) => (
-                     <option key={slots} value={slots}>
-                        {slots}
+                     <option key={slots?.slotId} value={slots?.slotId}>
+                        {slots?.startTime}-{slots?.endTime}
                      </option>))
                   }
                </select>
             </div>
 
-            {/* Book appointment */}
             <div>
                <button
                   onClick={(e) => onClickBookAnAppointment(e)}
@@ -196,11 +188,6 @@ function BookAppointment() {
                </button>
             </div>
          </form>
-
-         {/* Error Page */}
-         {
-            isError && ( <ErrorPage message={errorMessage} onErrorButtonClose={onErrorButtonClose} />)
-         }
       </div>
    );
 }
