@@ -59,7 +59,7 @@ function SignUp() {
          }
       } catch(e) {
          console.log(e);
-         dispatch({ type: "setErrorMessage", payload: e?.response?.data });
+         dispatch({ type: "setErrorMessage", payload: e?.response?.data?.detail });
       } finally {
          dispatch({ type: "unsetLoading" });
       }
