@@ -20,4 +20,8 @@ function setLocalStorageOnLogout() {
    localStorage.setItem('role', JSON.stringify(""));
 }
 
-export { setCurrentPathInLocalStorage, setLocalStorageValueOnLogin, setLocalStorageOnLogout }
+function isUnauthorized(e) {
+   return (e.status === 403);
+}
+
+export { setCurrentPathInLocalStorage, setLocalStorageValueOnLogin, setLocalStorageOnLogout, isUnauthorized }

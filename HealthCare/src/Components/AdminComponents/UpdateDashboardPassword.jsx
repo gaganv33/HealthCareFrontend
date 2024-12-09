@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { axiosInstance } from "../../axios/axios";
-import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { isUnauthorized, setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { useNavigate } from "react-router-dom";
 
 function UpdateDashboardPassword() {
@@ -26,7 +26,7 @@ function UpdateDashboardPassword() {
 
       dispatch({ type: "setLoading" });
       try {
-         const data = await axiosInstance.put("/admin/updateDashboardPassword", {
+         const data = await axiosInstance.post("/admin/updateDashboardPassword", {
             "oldPassword" : oldPassword,
             "newPassword" : newPassword,
             "retypeNewPassword": retypeNewPassword
@@ -35,7 +35,7 @@ function UpdateDashboardPassword() {
          dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");

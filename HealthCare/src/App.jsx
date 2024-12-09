@@ -22,6 +22,9 @@ import { AddLabTest } from './Components/AdminComponents/AddLabTest'
 import { AddNewSlots } from './Components/AdminComponents/AddNewSlots'
 import { GetAppointmentWaitingForApproval } from './Components/DoctorComponents/GetAppointmentWaitingForApproval'
 import { GetUpcomingAppointment } from './Components/DoctorComponents/GetUpcomingAppointment'
+import { ReceptionistLayout } from './Layout/Layouts/ReceptionistLayout'
+import { LayoutReceptionistIndex } from './Layout/Index/LayoutReceptionistIndex'
+import { PendingPrescriptionsPage } from './Components/ReceptonistComponents/PendingPrescriptionsPage'
 
 function App() {
 
@@ -60,6 +63,13 @@ function App() {
                                             }>
                 <Route index element={ <BookAppointment /> } />
                 <Route path='appointment/details' element={ <AppointmentDetails /> } />
+              </Route>
+              <Route path="receptionist" element={
+                                                    <ReceptionistLayout>
+                                                      <LayoutReceptionistIndex />
+                                                    </ReceptionistLayout>
+                                                  }>
+                <Route index element={ <PendingPrescriptionsPage /> } />
               </Route>
               <Route path="unauthorized" element={ <UnAuthorized /> } />
               <Route path='*' element={ <PageNotFound /> } />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../../axios/axios";
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
-import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { isUnauthorized, setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { useNavigate } from "react-router-dom";
 
 function FetchDisabledUsers() {
@@ -15,14 +15,14 @@ function FetchDisabledUsers() {
       e.preventDefault();
       dispatch({ type: "setLoading" });
       try {
-         const data = await axiosInstance.put("/admin/enableDisabledUser", {
+         const data = await axiosInstance.post("/admin/enableDisabledUser", {
             "username" : username
          });
          console.log(data);
          dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");
@@ -38,14 +38,14 @@ function FetchDisabledUsers() {
       e.preventDefault();
       dispatch({ type: "setLoading" });
       try {
-         const data = await axiosInstance.put("/admin/deleteDisabledUser", {
+         const data = await axiosInstance.post("/admin/deleteDisabledUser", {
             "username" : username, "role": role
          });
          console.log(data);
          dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");
@@ -66,7 +66,7 @@ function FetchDisabledUsers() {
             setData(data?.data);
          } catch(e) {
             console.log(e);
-            if(e.status === 403 || e.status === 401) {
+            if(isUnauthorized(e)) {
                dispatch({ type: "logout" });
                setCurrentPathInLocalStorage("/");
                navigate("/");
@@ -106,6 +106,9 @@ function FetchDisabledUsers() {
                   </p>
                   <p className="text-gray-700">
                      Username: <b className="text-gray-800">{user.username}</b>
+                  </p>
+                  <p className="text-gray-700">
+                     Role: <b className="text-gray-800">{user.role}</b>
                   </p>
 
                   <button

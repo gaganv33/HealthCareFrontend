@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { useNavigate } from "react-router-dom";
-import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { isUnauthorized, setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { axiosInstance } from "../../axios/axios";
 
 function GetAppointmentWaitingForApproval() {
@@ -21,7 +21,7 @@ function GetAppointmentWaitingForApproval() {
             setData(data.data);
          } catch(e) {
             console.log(e);
-            if(e.status === 403 || e.status === 401) {
+            if(isUnauthorized(e)) {
                dispatch({ type: "logout" });
                setCurrentPathInLocalStorage("/");
                navigate("/");
@@ -49,7 +49,7 @@ function GetAppointmentWaitingForApproval() {
          dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");
@@ -74,7 +74,7 @@ function GetAppointmentWaitingForApproval() {
          dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");

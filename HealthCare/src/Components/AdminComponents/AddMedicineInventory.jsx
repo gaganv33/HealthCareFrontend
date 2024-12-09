@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AuthConsumer } from "../../Hooks/AuthConsumer"
-import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { isUnauthorized, setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axios";
 
@@ -34,7 +34,7 @@ function AddMedicineInventory() {
          dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");

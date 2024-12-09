@@ -35,6 +35,10 @@ function AppLayout({ children }) {
             setCurrentPathInLocalStorage("/patient");
             navigate("/patient");
          }
+         else if(role === "ROLE_RECEPTIONIST") {
+            setCurrentPathInLocalStorage("/receptionist");
+            navigate("/receptionist");
+         }
          //
       }
    }

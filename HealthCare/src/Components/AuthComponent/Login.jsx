@@ -1,6 +1,5 @@
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { useState } from "react";
-import { ErrorPage } from "../MessageComponents/ErrorPage";
 import { useNavigate } from "react-router-dom";
 import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { axiosInstance } from "../../axios/axios";
@@ -12,8 +11,6 @@ function Login() {
 
    const [username, setUsername] = useState();
    const [password, setPassword] = useState();
-   const [isError, setIsError] = useState(false);
-   const [errorMessage, setErrorMessage] = useState("");
 
    async function onSubmitForm(e) {
       e.preventDefault();
@@ -21,31 +18,29 @@ function Login() {
       const isValid = emailPattern.test(username);
 
       if(!isValid) {
-         setErrorMessage(() => { return "Enter a valid username / email."; });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: "Enter a valid username / email" });
          return;
       }
 
       const length = password === null || password === undefined ? 0 : password.length;
 
       if(length < 4) {
-         setErrorMessage(() => { return "Minimum length of password is 4."; });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: "Minimum length of password is 4" });
          return;
       }
 
       if(length > 20) {
-         setErrorMessage(() => { return "Maximum length of password is 20."; });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: "Maximum length of password is 20" });
          return;
       }
-
+      
+      dispatch({ type: "setLoading" });
       try {
          const data = await axiosInstance.post("auth/login", 
-            { 
-               username: username, 
-               password: password 
-            });
+         { 
+            username: username, 
+            password: password 
+         });
          console.log(data);
          if(data.status === 200) {
             // Need to change according to the role.
@@ -58,7 +53,10 @@ function Login() {
             } else if(data.data.user.role === "ROLE_PATIENT") {
                setCurrentPathInLocalStorage("/patient");
                navigate("/patient");
-            }
+            } else if(data.data.user.role === "ROLE_RECEPTIONIST") {
+               setCurrentPathInLocalStorage("/receptionist");
+               navigate("/receptionist");
+            } 
             // 
             dispatch({ 
                type: "login", 
@@ -71,19 +69,14 @@ function Login() {
                }
             });
          } else {
-            setIsError(() => { return true; });
-            setErrorMessage(() => { return "Incorrect credentials."; });
+            dispatch({ type: "setErrorMessage", payload: "Incorrect credentials" });
          }
       } catch(e) {
          console.log(e);
-         setIsError(() => { return true; });
-         setErrorMessage(() => { return e?.response?.data?.detail; });
+         dispatch({ type: "setErrorMessage", payload: e?.response?.data?.detail });
+      } finally {
+         dispatch({ type: "unsetLoading" });
       }
-   }
-
-   function onErrorButtonClose() {
-      setIsError(() => { return false; });
-      setErrorMessage(() => { return ""; });
    }
 
    return (
@@ -114,9 +107,6 @@ function Login() {
                Login
             </button>
          </form>
-         {
-            isError && <ErrorPage message={ errorMessage } onErrorButtonClose={ onErrorButtonClose } />
-         }
       </div>
    );
 }

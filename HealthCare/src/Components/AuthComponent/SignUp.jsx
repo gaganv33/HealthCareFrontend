@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ErrorPage } from "../MessageComponents/ErrorPage";
-import { SuccessPage } from "../MessageComponents/SuccessPage";
-import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { axiosInstance } from "../../axios/axios";
+import { AuthConsumer } from "../../Hooks/AuthConsumer";
 
 function SignUp() {
+   const context = AuthConsumer();
+   const { dispatch } = context;
+
    const [username, setUsername] = useState();
    const [password, setPassword] = useState();
    const [confirmPassword, setconfirmPassword] = useState();
@@ -13,45 +13,34 @@ function SignUp() {
    const [lastName, setLastName] = useState();
    const [roles, setRoles] = useState("ROLE_ADMIN");
 
-   const [isError, setIsError] = useState(false);
-   const [errorMessage, setErrorMessage] = useState("");
-
-   const [isSuccess, setIsSuccess] = useState(false);
-   const [successMessage, setSuccessMessage] = useState("");
-
-   const navigate = useNavigate();
-
    async function onSubmitForm(e) {
       e.preventDefault();
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       const isValid = emailPattern.test(username);
 
       if(!isValid) {
-         setErrorMessage(() => { return "Enter a valid username / email."; });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: "Enter a valid username / email" });
          return;
       }
 
       if(password !== confirmPassword) {
-         setErrorMessage(() => { return "Passwords and not matching."; });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: "Passwords and not matching" });
          return;
       }
       
       const length = password === null || password === undefined ? 0 : password.length;
 
       if(length < 4) {
-         setErrorMessage(() => { return "Minimum length of password is 4."; });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: "Minimum length of password is 4" });
          return;
       }
 
       if(length > 20) {
-         setErrorMessage(() => { return "Maximum length of password is 20."; });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: "Maximum length of password is 20" });
          return;
       }
       
+      dispatch({ type: "setLoading" });
       try {
          const data = await axiosInstance.post("auth/register", {
             firstName : firstName, 
@@ -63,32 +52,17 @@ function SignUp() {
          });
          console.log(data);
          if(data.status === 201) {
-            setIsSuccess(() => { return true; });
-            setSuccessMessage(() => { return data.data; });
+            dispatch({ type: "setSuccessMessage", payload: data?.data });
          }
          else {
-            setErrorMessage(() => { return "Registration Failed. Try Again."; });
-            setIsError(() => { return true; });
+            dispatch({ type: "setErrorMessage", payload: "Registration Failed. Try Again" });
          }
       } catch(e) {
          console.log(e);
-         setErrorMessage(() => { 
-            return e?.response?.data 
-         });
-         setIsError(() => { return true; });
+         dispatch({ type: "setErrorMessage", payload: e?.response?.data });
+      } finally {
+         dispatch({ type: "unsetLoading" });
       }
-   }
-
-   function onErrorButtonClose() {
-      setIsError(() => { return false; });
-      setErrorMessage(() => { return ""; });
-   }
-
-   function onSuccessButtonClose() {
-      setIsSuccess(() => { return false; });
-      setSuccessMessage(() => { return ""; });
-      setCurrentPathInLocalStorage("/login");
-      navigate("/login");
    }
 
    return (
@@ -160,12 +134,6 @@ function SignUp() {
                Sign Up
             </button>
          </form>
-         {
-            isError && <ErrorPage message={ errorMessage } onErrorButtonClose={ onErrorButtonClose } />
-         }
-         {
-            isSuccess && <SuccessPage message={ successMessage } onSuccessButtonClose={ onSuccessButtonClose } />
-         }
       </div>
    );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AuthConsumer } from "../../Hooks/AuthConsumer";
-import { setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
+import { isUnauthorized, setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../axios/axios";
 
@@ -32,7 +32,7 @@ function BookAppointment() {
             setDoctors(data.data);
          } catch(e) {
             console.log(e);
-            if(e.status === 403 || e.status === 401) {
+            if(isUnauthorized(e)) {
                dispatch({ type: "logout" });
                setCurrentPathInLocalStorage("/");
                navigate("/");
@@ -68,7 +68,7 @@ function BookAppointment() {
          setOpenSlots(() => { return data.data; });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");
@@ -106,7 +106,7 @@ function BookAppointment() {
          dispatch({ type: "setSuccessMessage", payload: data.data });
       } catch(e) {
          console.log(e);
-         if(e.status === 403 || e.status === 401) {
+         if(isUnauthorized(e)) {
             dispatch({ type: "logout" });
             setCurrentPathInLocalStorage("/");
             navigate("/");

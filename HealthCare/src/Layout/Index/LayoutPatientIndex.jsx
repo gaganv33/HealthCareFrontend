@@ -15,7 +15,7 @@ function LayoutPatientIndex() {
       e.preventDefault();
       setCurrentPathInLocalStorage("/patient/appointment/details");
       navigate("/patient/appointment/details");
-      console.log("Appointment details")
+      console.log("Appointment details");
    }
 
    return (
