@@ -106,6 +106,7 @@ function DiagnosisPage({ appointmentId, closeDiagnosisButton }) {
       dispatch({ type: "setLoading" });
 
       try {
+         console.log(formData.medicineIds);
          if(formData.role === "receptionist") {
             const recepData = await axiosInstance.post("/doctor/diagnose/createPrescriptionRecord", {
                "appointmentId" : appointment?.appointmentId,

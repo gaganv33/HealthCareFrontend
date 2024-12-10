@@ -21,7 +21,7 @@ function setLocalStorageOnLogout() {
 }
 
 function isUnauthorized(e) {
-   return (e.status === 403);
+   return (e.status === 401);
 }
 
 export { setCurrentPathInLocalStorage, setLocalStorageValueOnLogin, setLocalStorageOnLogout, isUnauthorized }
