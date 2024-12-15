@@ -22,7 +22,7 @@ function Login() {
          return;
       }
 
-      const length = password === null || password === undefined ? 0 : password.length;
+      const length = ((password === null) || (password === undefined)) ? 0 : password.length;
 
       if(length < 4) {
          dispatch({ type: "setErrorMessage", payload: "Minimum length of password is 4" });
