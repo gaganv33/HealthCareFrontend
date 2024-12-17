@@ -64,9 +64,10 @@ function PendingPrescriptionsPage() {
             Get All Pending Prescriptions
          </h1>
          <div>
-            {data.length === 0 && (
+            {
+               data !== null && data?.length === 0 && (
                <h3 className="text-center text-lg text-gray-600 font-medium">
-               No Prescription Found
+                  No Prescription Found
                </h3>
             )}
          </div>
@@ -93,12 +94,13 @@ function PendingPrescriptionsPage() {
                </div>
 
                {
-                  prescription?.medicineInventoryEntity.length > 0 && (
+                  prescription?.medicineInventoryEntities !== null && 
+                  prescription?.medicineInventoryEntities?.length > 0 && (
                   <div>
                      <h4 className="text-gray-800 font-semibold mb-2">Medicines:</h4>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                      {
-                        prescription?.medicineInventoryEntity.map((medicine) => (
+                        prescription?.medicineInventoryEntities.map((medicine) => (
                         <div
                            key={medicine?.medicineId}
                            className="border border-gray-300 rounded-md p-3 bg-gray-50 shadow-sm">

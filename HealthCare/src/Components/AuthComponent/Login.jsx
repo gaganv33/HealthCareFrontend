@@ -57,6 +57,10 @@ function Login() {
                setCurrentPathInLocalStorage("/receptionist");
                navigate("/receptionist");
             } 
+            else if(data.data.user.role === "ROLE_PHLEBOTOMIST") {
+               setCurrentPathInLocalStorage("/phlebotomist");
+               navigate("/phlebotomist");
+            } 
             // 
             dispatch({ 
                type: "login", 

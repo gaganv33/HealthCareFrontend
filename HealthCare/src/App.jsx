@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './Context/AuthContext'
 import { AppLayout } from './Layout/AppLayout'
-import { SignUp } from './Components/AuthComponent/Signup'
 import { HomePage } from './Components/HomePageComponent/HomePage'
 import { Login } from './Components/AuthComponent/Login'
 import { UnAuthorized } from './Components/UnAuthorizedComponent/UnAuthorized'
@@ -25,6 +24,10 @@ import { GetUpcomingAppointment } from './Components/DoctorComponents/GetUpcomin
 import { ReceptionistLayout } from './Layout/Layouts/ReceptionistLayout'
 import { LayoutReceptionistIndex } from './Layout/Index/LayoutReceptionistIndex'
 import { PendingPrescriptionsPage } from './Components/ReceptonistComponents/PendingPrescriptionsPage'
+import { PhlebotomistLayout } from './Layout/Layouts/PhlebotomistLayout'
+import { LayoutPhlebotomistIndex } from './Layout/Index/LayoutPhlebotomistIndex'
+import { GetAllPendingTests } from './Components/PhlebotomistComponents/GetAllPendingTests'
+import { SignUp } from './Components/AuthComponent/SignUp'
 
 function App() {
 
@@ -70,6 +73,13 @@ function App() {
                                                     </ReceptionistLayout>
                                                   }>
                 <Route index element={ <PendingPrescriptionsPage /> } />
+              </Route>
+              <Route path="phlebotomist" element={
+                                                    <PhlebotomistLayout>
+                                                      <LayoutPhlebotomistIndex />
+                                                    </PhlebotomistLayout>
+                                                  }>
+                <Route index element={ <GetAllPendingTests /> } />
               </Route>
               <Route path="unauthorized" element={ <UnAuthorized /> } />
               <Route path='*' element={ <PageNotFound /> } />

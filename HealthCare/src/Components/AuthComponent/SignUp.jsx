@@ -138,4 +138,4 @@ function SignUp() {
    );
 }
 
-export {SignUp};
+export { SignUp };

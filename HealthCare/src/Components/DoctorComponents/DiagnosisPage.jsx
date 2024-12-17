@@ -121,11 +121,13 @@ function DiagnosisPage({ appointmentId, closeDiagnosisButton }) {
             console.log(phlebData);
          }
 
-         const feedbackData = await axiosInstance.post("/doctor/diagnose/createDoctorFeedbackRecord", {
-            "appointmentId" : appointment?.appointmentId,
-            "doctorFeedback" : formData.doctorFeedback
-         });
-         console.log(feedbackData);
+         if(appointment?.stage === "doctor_v1") {
+            const feedbackData = await axiosInstance.post("/doctor/diagnose/createDoctorFeedbackRecord", {
+               "appointmentId" : appointment?.appointmentId,
+               "doctorFeedback" : formData.doctorFeedback
+            });
+            console.log(feedbackData);
+         }
 
          if(formData.role === "receptionist") {
             const updateStage = await axiosInstance.post("/doctor/diagnose/updateStage", {
@@ -251,22 +253,26 @@ function DiagnosisPage({ appointmentId, closeDiagnosisButton }) {
                   </div>)
                }
 
-               <div>
-                  <label className="block text-gray-700 font-medium mb-2">
-                     Doctor Feedback
-                  </label>
-                  <textarea
-                     placeholder="Doctor Feedback..."
-                     value={formData.doctorFeedback}
-                     onChange={(e) =>
-                     setFormData((data) => ({
-                        ...data,
-                        doctorFeedback: e.target.value,
-                     }))
-                     }
-                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  ></textarea>
-               </div>
+               {
+                  appointment?.stage === "doctor_v1" && (
+                     <div>
+                        <label className="block text-gray-700 font-medium mb-2">
+                           Doctor Feedback
+                        </label>
+                        <textarea
+                           placeholder="Doctor Feedback..."
+                           value={formData?.doctorFeedback}
+                           onChange={(e) =>
+                           setFormData((data) => ({
+                              ...data,
+                              doctorFeedback: e.target.value,
+                           }))
+                           }
+                           className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        ></textarea>
+                     </div>
+                  )
+               }
 
                <div className="flex justify-end space-x-4">
                   <button
