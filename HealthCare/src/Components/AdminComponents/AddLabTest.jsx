@@ -11,6 +11,7 @@ function AddLabTest() {
 
    const [labTestName, setLabTestName] = useState("");
    const [labTestFields, setLabTestFields] = useState("");
+   const [labTestPrice, setLabTestPrice] = useState(0);
 
    async function onSubmit(e) {
       e.preventDefault();
@@ -20,7 +21,8 @@ function AddLabTest() {
          const data = await axiosInstance.post("/admin/addNewLabTests", [
             {
                "labTestName" : labTestName,
-               "labTestFields": labTestFields.trim().split(",")
+               "labTestFields": labTestFields.trim().split(","),
+               "labTestPrice" : labTestPrice
             }
          ]);
          console.log(data);
@@ -61,6 +63,16 @@ function AddLabTest() {
                      placeholder="Enter lab test field (separated by ,)"
                      value={labTestFields}
                      onChange={(e) => setLabTestFields(e.target.value)}
+                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+               </div>
+               <div>
+                  <label className="block text-gray-700 font-medium mb-2">Lab Test Price</label>
+                  <input
+                     type="number"
+                     placeholder="Enter lab test price"
+                     value={labTestPrice}
+                     onChange={(e) => setLabTestPrice(e.target.value)}
                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                </div>

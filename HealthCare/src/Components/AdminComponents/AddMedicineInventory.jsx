@@ -12,6 +12,7 @@ function AddMedicineInventory() {
    const [medicineName, setMedicineName] = useState("");
    const [medicineQuantity, setMedicineQuantity] = useState("");
    const [medicineSerialNumber, setMedicineSerialNumber] = useState("");
+   const [medicinePrice, setMedicinePrice] = useState(0);
 
    async function onSubmit(e) {
       e.preventDefault();
@@ -27,7 +28,8 @@ function AddMedicineInventory() {
             {
                "medicineName": medicineName,
                "medicineQuantity": parseInt(medicineQuantity, 10),
-               "medicineSerialNumber": medicineSerialNumber
+               "medicineSerialNumber": medicineSerialNumber,
+               "medicinePrice" : medicinePrice
             }
          ]);
          console.log(data);
@@ -83,6 +85,17 @@ function AddMedicineInventory() {
                      placeholder="Enter medicine serial number"
                      value={medicineSerialNumber}
                      onChange={(e) => setMedicineSerialNumber(e.target.value)}
+                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+               </div>
+
+               <div>
+                  <label className="block text-gray-700 font-medium mb-2">Medicine Price</label>
+                  <input
+                     type="number"
+                     placeholder="Enter medicine price"
+                     value={medicinePrice}
+                     onChange={(e) => setMedicinePrice(e.target.value)}
                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                </div>

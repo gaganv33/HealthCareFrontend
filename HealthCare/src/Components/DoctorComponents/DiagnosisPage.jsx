@@ -19,6 +19,7 @@ function DiagnosisPage({ appointmentId, closeDiagnosisButton }) {
       "medicineIds": [],
       "doctorFeedback": ""
    });
+   const [phlebotomistTestRecord, setPhlebotomistTestRecord] = useState({});
 
    useEffect(() => {
       async function getAppointmentData() {
@@ -42,6 +43,22 @@ function DiagnosisPage({ appointmentId, closeDiagnosisButton }) {
             const medicineRecords = await axiosInstance.get("/doctor/diagnose/getAllMedicineInventory");
             console.log(medicineRecords);
             setMedicineData(medicineRecords.data);
+
+            try {
+               const phlebotomistTestData = await 
+               axiosInstance.get("/doctor/diagnose/getPhlebotomistTestRecords?appointmentId=" + appointmentId);
+               Object.keys(phlebotomistTestData.data).map((data) => {
+                  setPhlebotomistTestRecord((prev) => {
+                     return {
+                        ...prev,
+                        [data] : phlebotomistTestData.data[data]
+                     }
+                  })
+               });
+            } catch(e) {
+               console.log(e);
+               dispatch({ type: "setErrorMessage", payload: "Error while loading phlebotomist test results" });
+            }
          } catch(e) {
             console.log(e);
             if(isUnauthorized(e)) {
@@ -272,6 +289,32 @@ function DiagnosisPage({ appointmentId, closeDiagnosisButton }) {
                         ></textarea>
                      </div>
                   )
+               }
+
+               {
+                  Object.keys(phlebotomistTestRecord).length > 0 && (
+                  <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200">
+                     <h3 className="text-xl font-bold text-gray-800 mb-4 text-center">
+                        Patient Phlebotomist Test Results
+                     </h3>
+                     <div className="space-y-4">
+                        {Object.keys(phlebotomistTestRecord).map((key) => (
+                           <div key={key} className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-300">
+                              <h4 className="text-lg font-semibold text-gray-700">
+                                 Lab Test Name: <span className="font-medium">{key}</span>
+                              </h4>
+                              <div className="mt-2 space-y-2">
+                                 {Object.keys(phlebotomistTestRecord[key]).map((innerKey) => (
+                                    <div key={innerKey} className="text-gray-600">
+                                       <span className="font-semibold">{innerKey}:</span>{" "}
+                                       <span className="font-medium">{phlebotomistTestRecord[key][innerKey]}</span>
+                                    </div>
+                                 ))}
+                              </div>
+                           </div>
+                        ))}
+                     </div>
+                  </div>)
                }
 
                <div className="flex justify-end space-x-4">
