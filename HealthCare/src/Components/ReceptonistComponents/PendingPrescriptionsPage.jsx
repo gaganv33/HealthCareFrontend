@@ -3,6 +3,7 @@ import { AuthConsumer } from "../../Hooks/AuthConsumer";
 import { useEffect, useState } from "react";
 import { isUnauthorized, setCurrentPathInLocalStorage } from "../../Hooks/UtilFunctions";
 import { axiosInstance } from "../../axios/axios";
+import Bill from "./Bill";
 
 function PendingPrescriptionsPage() {
    const context = AuthConsumer();
@@ -10,6 +11,18 @@ function PendingPrescriptionsPage() {
    const navigate = useNavigate();
 
    const [data, setData] = useState([]);
+   const [displayBill, setDisplayBill] = useState(false);
+   const [username, setUsername] = useState("");
+
+   function onclickGenerateBill(e, patientUsername) {
+      e.preventDefault();
+      setDisplayBill(() => true);
+      setUsername(() => patientUsername);
+   }
+
+   function closeBill() {
+      setDisplayBill(() => false);
+   }
 
    useEffect(() => {
       async function getAllPendingPrescription() {
@@ -131,9 +144,23 @@ function PendingPrescriptionsPage() {
                      Completed
                   </button>
                </div>
+
+               <div className="flex justify-end">
+                  <button
+                     onClick={(e) => 
+                        onclickGenerateBill(e, prescription?.appointmentEntity?.patient?.userEntity?.username)}
+                     className="px-4 py-2 bg-blue-500 text-white font-medium rounded-lg hover:bg-blue-600 transition">
+                     Generate Bill
+                  </button>
+               </div>
                </div>
             ))}
          </div>
+         {
+            displayBill && (
+               <Bill closeBill={closeBill} username={username} />
+            )
+         }
       </div>
    )
 }

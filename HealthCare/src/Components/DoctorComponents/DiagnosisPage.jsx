@@ -44,20 +44,22 @@ function DiagnosisPage({ appointmentId, closeDiagnosisButton }) {
             console.log(medicineRecords);
             setMedicineData(medicineRecords.data);
 
-            try {
-               const phlebotomistTestData = await 
-               axiosInstance.get("/doctor/diagnose/getPhlebotomistTestRecords?appointmentId=" + appointmentId);
-               Object.keys(phlebotomistTestData.data).map((data) => {
-                  setPhlebotomistTestRecord((prev) => {
-                     return {
-                        ...prev,
-                        [data] : phlebotomistTestData.data[data]
-                     }
-                  })
-               });
-            } catch(e) {
-               console.log(e);
-               dispatch({ type: "setErrorMessage", payload: "Error while loading phlebotomist test results" });
+            if(data?.data[0].stage === "doctor_v2") {
+               try {
+                  const phlebotomistTestData = await 
+                  axiosInstance.get("/doctor/diagnose/getPhlebotomistTestRecords?appointmentId=" + appointmentId);
+                  Object.keys(phlebotomistTestData.data).map((data) => {
+                     setPhlebotomistTestRecord((prev) => {
+                        return {
+                           ...prev,
+                           [data] : phlebotomistTestData.data[data]
+                        }
+                     })
+                  });
+               } catch(e) {
+                  console.log(e);
+                  dispatch({ type: "setErrorMessage", payload: "Error while loading phlebotomist test results" });
+               }
             }
          } catch(e) {
             console.log(e);
