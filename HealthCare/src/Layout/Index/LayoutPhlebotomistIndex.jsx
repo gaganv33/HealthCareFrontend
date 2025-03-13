@@ -14,7 +14,7 @@ function LayoutPhlebotomistIndex() {
    return (
          <div className="min-h-screen bg-gray-100 p-4">
             <h1 className="text-xl font-bold text-center mb-4 text-gray-800">
-               Receptionist Home Page
+               Phlebotomist Home Page
             </h1>
             <nav className="flex flex-wrap gap-2 justify-center mb-6">
                <button
